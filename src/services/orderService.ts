@@ -3,8 +3,8 @@
  */
 
 import api from '@/utils/axios';
-import axios, { AxiosError } from 'axios';
-import { OrderRequestBody, OrderResponseBody, PlaceOrderResult } from '@/types/Order';
+import axios, {AxiosError} from 'axios';
+import {OrderRequestBody, OrderResponseBody, PlaceOrderResult} from '@/types/Order';
 
 export class OrderService {
     private baseURL = '/api/user/order';
@@ -12,16 +12,15 @@ export class OrderService {
     /**
      * Places an order
      * @param orderData - The order data to send
-     * @param token - Authentication token
-     * @returns Promise with order placement result
+     * @returns Promise with a result of order-placement
      */
-    async placeOrder(orderData: OrderRequestBody, token: string): Promise<PlaceOrderResult> {
+    async placeOrder(orderData: OrderRequestBody): Promise<PlaceOrderResult> {
         try {
             const response = await api.post<string>(
                 `${this.baseURL}/placeOrder`,
                 orderData,
                 {
-                    timeout: 30000, // 30 seconds timeout
+                    timeout: 30000, // 30-seconds timeout
                 }
             );
 
@@ -47,15 +46,14 @@ export class OrderService {
     /**
      * Fetches all orders for a user
      * @param userId - The user ID
-     * @param token - Authentication token
      * @returns Promise with user orders
      */
-    async getAllOrders(userId: number, token: string): Promise<OrderResponseBody[]> {
+    async getAllOrders(userId: number): Promise<OrderResponseBody[]> {
         try {
             const response = await api.get<OrderResponseBody[]>(
                 `${this.baseURL}/allOrders/${userId}`,
                 {
-                    timeout: 15000, // 15 seconds timeout
+                    timeout: 15000, // 15-seconds timeout
                 }
             );
 

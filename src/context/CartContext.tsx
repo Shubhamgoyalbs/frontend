@@ -1,6 +1,6 @@
 "use client";
 
-import {createContext, ReactNode, useContext, useState, useEffect} from 'react';
+import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import {Product} from '@/types/Product';
 
 // localStorage keys
@@ -18,7 +18,7 @@ const saveToLocalStorage = (key: string, value: unknown) => {
     }
 };
 
-const getFromLocalStorage = <T,>(key: string, defaultValue: T): T => {
+const getFromLocalStorage = <T, >(key: string, defaultValue: T): T => {
     try {
         if (typeof window !== 'undefined') {
             const item = localStorage.getItem(key);
@@ -68,7 +68,7 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
     useEffect(() => {
         const savedCartItems = getFromLocalStorage<CartItem[]>(CART_ITEMS_KEY, []);
         const savedSellerId = getFromLocalStorage<number | null>(CURRENT_SELLER_KEY, null);
-        
+
         setCartItems(savedCartItems);
         setCurrentSellerId(savedSellerId);
         setIsLoaded(true);

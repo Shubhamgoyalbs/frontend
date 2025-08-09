@@ -32,13 +32,13 @@ export const decodeJWT = (token: string): JWTPayload | null => {
 
         // Decode the payload (second part)
         const payload = parts[1];
-        
+
         // Add padding if needed for base64 decoding
         const paddedPayload = payload + '='.repeat((4 - payload.length % 4) % 4);
-        
+
         // Decode base64 and parse JSON
         const decodedPayload = JSON.parse(atob(paddedPayload));
-        
+
         return decodedPayload as JWTPayload;
     } catch (error) {
         console.error('Error decoding JWT token:', error);
@@ -107,7 +107,7 @@ export const isTokenExpired = (token: string): boolean => {
     if (!payload?.exp) {
         return true;
     }
-    
+
     // JWT exp is in seconds, Date.now() is in milliseconds
     return payload.exp * 1000 < Date.now();
 };
@@ -160,11 +160,11 @@ export const getTimeUntilExpiration = (token: string): number => {
     if (!payload?.exp) {
         return 0;
     }
-    
+
     const expirationTime = payload.exp * 1000; // Convert to milliseconds
     const currentTime = Date.now();
     const timeRemaining = expirationTime - currentTime;
-    
+
     return Math.max(0, timeRemaining);
 };
 
@@ -175,15 +175,15 @@ export const getTimeUntilExpiration = (token: string): number => {
  */
 export const getFormattedTimeUntilExpiration = (token: string): string => {
     const timeRemaining = getTimeUntilExpiration(token);
-    
+
     if (timeRemaining <= 0) {
         return 'Expired';
     }
-    
+
     const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
     const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-    
+
     if (hours > 0) {
         return `${hours}h ${minutes}m`;
     } else if (minutes > 0) {
@@ -251,7 +251,7 @@ export const getUserInfoFromToken = (token: string): {
 } | null => {
     const payload = decodeJWT(token);
     if (!payload) return null;
-    
+
     return {
         userId: payload.userId,
         username: payload.username,
@@ -271,7 +271,7 @@ export const getUserInfoFromToken = (token: string): {
 export const hasCompleteUserInfo = (token: string): boolean => {
     const payload = decodeJWT(token);
     if (!payload) return false;
-    
+
     return !!(payload.userId && payload.username && payload.email && payload.role);
 };
 
@@ -283,7 +283,7 @@ export const hasCompleteUserInfo = (token: string): boolean => {
 export const isUserAdmin = (token: string): boolean => {
     const role = getUserPrimaryRoleFromToken(token);
     const roles = getUserRolesFromToken(token);
-    
+
     return role === 'ADMIN' || roles.includes('ROLE_ADMIN');
 };
 
@@ -295,7 +295,7 @@ export const isUserAdmin = (token: string): boolean => {
 export const isUserSeller = (token: string): boolean => {
     const role = getUserPrimaryRoleFromToken(token);
     const roles = getUserRolesFromToken(token);
-    
+
     return role === 'SELLER' || roles.includes('ROLE_SELLER');
 };
 
@@ -307,6 +307,6 @@ export const isUserSeller = (token: string): boolean => {
 export const isUserRegular = (token: string): boolean => {
     const role = getUserPrimaryRoleFromToken(token);
     const roles = getUserRolesFromToken(token);
-    
+
     return role === 'USER' || roles.includes('ROLE_USER');
 };

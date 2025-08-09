@@ -2,7 +2,7 @@
 
 import {createContext, useContext, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import { getUserPrimaryRoleFromToken, isTokenExpired } from "@/utils/jwtUtils";
+import {getUserPrimaryRoleFromToken, isTokenExpired} from "@/utils/jwtUtils";
 
 interface AuthContextType {
     token: string | null;
@@ -35,7 +35,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
 
             // Extract role from JWT token
             const roleFromToken = getUserPrimaryRoleFromToken(storedToken);
-            
+
             if (roleFromToken) {
                 setToken(storedToken);
                 setRole(roleFromToken);
@@ -48,11 +48,11 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
 
     const login = (newToken: string, newRole?: string) => {
         setToken(newToken);
-        
+
         // Extract role from token if not provided
         const roleFromToken = newRole || getUserPrimaryRoleFromToken(newToken);
         setRole(roleFromToken);
-        
+
         // Only store token, role comes from JWT
         localStorage.setItem("token", newToken);
         // Remove old role storage

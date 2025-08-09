@@ -2,7 +2,7 @@
  * Type definitions for Order API
  */
 
-import { SellerInfo } from './ProductSeller';
+import {SellerInfo} from './ProductSeller';
 
 // ORBProduct matches backend ORBProduct class
 export interface ORBProduct {

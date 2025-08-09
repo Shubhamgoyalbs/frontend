@@ -78,7 +78,7 @@ export default function Login() {
                     router.push("/user/home");
                 } else if (role === "SELLER") {
                     router.push("/seller/home");
-                }else {
+                } else {
                     router.push("/")
                 }
             }

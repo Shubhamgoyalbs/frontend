@@ -18,7 +18,7 @@ import {
     Wallet
 } from "lucide-react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useMemo, useState, Suspense} from "react";
+import {Suspense, useEffect, useMemo, useState} from "react";
 import UserNavbar from "@/components/user/UserNavbar";
 import {useAuth} from "@/context/AuthContext";
 import {useCart} from "@/context/CartContext";
@@ -302,8 +302,8 @@ function SellerDetailContent() {
 
 export default function SellerDetail() {
     return (
-        <Suspense fallback={<LoadingPage />}>
-            <SellerDetailContent />
+        <Suspense fallback={<LoadingPage/>}>
+            <SellerDetailContent/>
         </Suspense>
     );
 }

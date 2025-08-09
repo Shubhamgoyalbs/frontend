@@ -24,9 +24,9 @@ import {LoadingPage} from "@/components/LoadingPage";
 import api from "@/utils/axios";
 import axios from "axios";
 import UserNavbar from "@/components/user/UserNavbar";
-import { orderService } from "@/services/orderService";
-import { getUserIdFromToken } from "@/utils/jwtUtils";
-import { OrderRequestBody } from "@/types/Order";
+import {orderService} from "@/services/orderService";
+import {getUserIdFromToken} from "@/utils/jwtUtils";
+import {OrderRequestBody} from "@/types/Order";
 
 export default function CartPage() {
     const router = useRouter();
@@ -36,7 +36,7 @@ export default function CartPage() {
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
     const [currentSeller, setCurrentSeller] = useState<SellerInfo | null>(null);
-    
+
     // Calculate delivery charges (4% if subtotal < 200, otherwise free)
     const deliveryCharges = subtotal < 200 ? subtotal * 0.04 : 0;
     const totalAmount = subtotal + deliveryCharges;
@@ -88,7 +88,7 @@ export default function CartPage() {
         try {
             // Try to get userId from token, but don't fail if it's not there (for old tokens)
             let userId = getUserIdFromToken(token);
-            
+
             // If userId is not in token (old token), we'll let the backend handle it
             // The backend will extract user info from the token or reject with 401/403
             if (!userId) {
@@ -108,7 +108,7 @@ export default function CartPage() {
             };
 
             // Call the order service
-            const result = await orderService.placeOrder(orderData, token);
+            const result = await orderService.placeOrder(orderData);
 
             if (result.success) {
                 // Clear cart and show success
@@ -122,14 +122,14 @@ export default function CartPage() {
                     logout();
                     return;
                 }
-                
+
                 // Show other error messages
                 const errorMessage = result.error?.message || "Failed to place order. Please try again.";
                 alert(`Error: ${errorMessage}`);
             }
         } catch (error) {
             console.error("Error placing order:", error);
-            
+
             // Check if it's an axios error with 401/403 status
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === 401 || error.response?.status === 403) {
@@ -138,7 +138,7 @@ export default function CartPage() {
                     return;
                 }
             }
-            
+
             alert("An unexpected error occurred. Please try again.");
         } finally {
             setIsPlacingOrder(false);
@@ -346,7 +346,8 @@ export default function CartPage() {
                                     {deliveryCharges === 0 ? (
                                         <span className="text-green-600 font-medium">Free</span>
                                     ) : (
-                                        <span className="text-orange-600 font-medium">${deliveryCharges.toFixed(2)}</span>
+                                        <span
+                                            className="text-orange-600 font-medium">${deliveryCharges.toFixed(2)}</span>
                                     )}
                                 </div>
                                 {deliveryCharges > 0 && (

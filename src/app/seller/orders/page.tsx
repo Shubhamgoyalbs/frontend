@@ -1,35 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
 import api from "@/utils/axios";
-import { useAuth } from "@/context/AuthContext";
-import { getUserIdFromToken } from "@/utils/jwtUtils";
-import { OrderResponseBody } from "@/types/Order";
+import {useAuth} from "@/context/AuthContext";
+import {getUserIdFromToken} from "@/utils/jwtUtils";
+import {OrderResponseBody} from "@/types/Order";
 import {
-    ArrowLeft,
-    Package,
-    User,
-    Mail,
-    Phone,
-    Home,
-    MapPin,
-    Check,
-    Clock,
-    ShoppingBag,
     AlertCircle,
-    RefreshCw,
-    X,
+    Check,
     CheckCircle,
+    Clock,
     DollarSign,
-    Calendar
+    Home,
+    Mail,
+    MapPin,
+    Package,
+    Phone,
+    RefreshCw,
+    ShoppingBag,
+    User,
+    X
 } from "lucide-react";
 import SellerNavbar from "@/components/seller/SellerNavbar";
 
 export default function SellerOrders() {
     const router = useRouter();
-    const { token, loading: authLoading } = useAuth();
-    
+    const {token, loading: authLoading} = useAuth();
+
     // Get seller ID from JWT token
     const sellerId = token ? getUserIdFromToken(token) : null;
 
@@ -56,13 +54,13 @@ export default function SellerOrders() {
             setLoading(true);
             setError("");
             const response = await api.get(`/api/seller/order/allOrders/${sellerId}`);
-            
+
             // Debug logging
             console.log('📦 Orders API Response:', response.data);
             response.data.forEach((order: OrderResponseBody) => {
                 console.log(`Order ${order.orderId}: isAccepted=${order.accepted} (${typeof order.accepted}), isCompleted=${order.completed} (${typeof order.completed})`);
             });
-            
+
             setOrders(response.data);
         } catch (err) {
             setError("Failed to fetch orders");
@@ -85,7 +83,9 @@ export default function SellerOrders() {
             await fetchOrders();
             setError("");
         } catch (err: unknown) {
-            const errorMessage = (err as {response?: {data?: {error?: string}}})?.response?.data?.error || "Failed to accept order";
+            const errorMessage = (err as {
+                response?: { data?: { error?: string } }
+            })?.response?.data?.error || "Failed to accept order";
             setError(errorMessage);
             console.error("Error accepting order:", err);
         } finally {
@@ -110,13 +110,15 @@ export default function SellerOrders() {
             setOrders(prev =>
                 prev.map(order =>
                     order.orderId === orderId
-                        ? { ...order, completed: true }
+                        ? {...order, completed: true}
                         : order
                 )
             );
             setError("");
         } catch (err: unknown) {
-            const errorMessage = (err as {response?: {data?: {error?: string}}})?.response?.data?.error || "Failed to complete order";
+            const errorMessage = (err as {
+                response?: { data?: { error?: string } }
+            })?.response?.data?.error || "Failed to complete order";
             setError(errorMessage);
             console.error("Error completing order:", err);
         } finally {
@@ -130,11 +132,11 @@ export default function SellerOrders() {
 
     const getOrderStatus = (order: OrderResponseBody) => {
         if (order.completed) {
-            return { text: "Completed", color: "green", bgColor: "bg-green-100", textColor: "text-green-800" };
+            return {text: "Completed", color: "green", bgColor: "bg-green-100", textColor: "text-green-800"};
         } else if (order.accepted) {
-            return { text: "Accepted", color: "blue", bgColor: "bg-blue-100", textColor: "text-blue-800" };
+            return {text: "Accepted", color: "blue", bgColor: "bg-blue-100", textColor: "text-blue-800"};
         } else {
-            return { text: "Pending", color: "yellow", bgColor: "bg-yellow-100", textColor: "text-yellow-800" };
+            return {text: "Pending", color: "yellow", bgColor: "bg-yellow-100", textColor: "text-yellow-800"};
         }
     };
 
@@ -147,16 +149,17 @@ export default function SellerOrders() {
             .filter(o => o.completed)
             .reduce((sum, order) => sum + order.price, 0);
 
-        return { total, pending, accepted, completed, totalRevenue };
+        return {total, pending, accepted, completed, totalRevenue};
     };
 
     const stats = getOrderStats();
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
+            <div
+                className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
                 <div className="text-center">
-                    <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+                    <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4"/>
                     <p className="text-gray-600">Loading your orders...</p>
                 </div>
             </div>
@@ -172,13 +175,13 @@ export default function SellerOrders() {
                 {/* Error Message */}
                 {error && (
                     <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                        <AlertCircle className="w-5 h-5 text-red-500" />
+                        <AlertCircle className="w-5 h-5 text-red-500"/>
                         <p className="text-red-700">{error}</p>
                         <button
                             onClick={() => setError("")}
                             className="ml-auto text-red-500 hover:text-red-700"
                         >
-                            <X className="w-4 h-4" />
+                            <X className="w-4 h-4"/>
                         </button>
                     </div>
                 )}
@@ -192,7 +195,7 @@ export default function SellerOrders() {
                                 <p className="text-3xl font-bold text-blue-600">{stats.total}</p>
                             </div>
                             <div className="bg-blue-100 p-3 rounded-lg">
-                                <ShoppingBag className="w-6 h-6 text-blue-600" />
+                                <ShoppingBag className="w-6 h-6 text-blue-600"/>
                             </div>
                         </div>
                     </div>
@@ -204,7 +207,7 @@ export default function SellerOrders() {
                                 <p className="text-3xl font-bold text-yellow-600">{stats.pending}</p>
                             </div>
                             <div className="bg-yellow-100 p-3 rounded-lg">
-                                <Clock className="w-6 h-6 text-yellow-600" />
+                                <Clock className="w-6 h-6 text-yellow-600"/>
                             </div>
                         </div>
                     </div>
@@ -216,7 +219,7 @@ export default function SellerOrders() {
                                 <p className="text-3xl font-bold text-blue-600">{stats.accepted}</p>
                             </div>
                             <div className="bg-blue-100 p-3 rounded-lg">
-                                <Check className="w-6 h-6 text-blue-600" />
+                                <Check className="w-6 h-6 text-blue-600"/>
                             </div>
                         </div>
                     </div>
@@ -228,7 +231,7 @@ export default function SellerOrders() {
                                 <p className="text-3xl font-bold text-green-600">{stats.completed}</p>
                             </div>
                             <div className="bg-green-100 p-3 rounded-lg">
-                                <CheckCircle className="w-6 h-6 text-green-600" />
+                                <CheckCircle className="w-6 h-6 text-green-600"/>
                             </div>
                         </div>
                     </div>
@@ -240,7 +243,7 @@ export default function SellerOrders() {
                                 <p className="text-3xl font-bold text-purple-600">${(stats.totalRevenue / 100).toFixed(2)}</p>
                             </div>
                             <div className="bg-purple-100 p-3 rounded-lg">
-                                <DollarSign className="w-6 h-6 text-purple-600" />
+                                <DollarSign className="w-6 h-6 text-purple-600"/>
                             </div>
                         </div>
                     </div>
@@ -252,20 +255,21 @@ export default function SellerOrders() {
                         <h2 className="text-xl font-semibold text-gray-900">
                             Your Orders ({orders.length})
                         </h2>
-                        
+
                         <button
                             onClick={fetchOrders}
                             className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
                         >
-                            <RefreshCw className="w-4 h-4" />
+                            <RefreshCw className="w-4 h-4"/>
                             Refresh
                         </button>
                     </div>
 
                     {orders.length === 0 ? (
                         <div className="text-center py-16">
-                            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                                <ShoppingBag className="w-12 h-12 text-blue-500" />
+                            <div
+                                className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                                <ShoppingBag className="w-12 h-12 text-blue-500"/>
                             </div>
                             <h3 className="text-2xl font-bold text-gray-900 mb-4">No orders yet</h3>
                             <p className="text-gray-600 mb-8">When customers place orders, they&apos;ll appear here.</p>
@@ -294,7 +298,8 @@ export default function SellerOrders() {
                                                         Order #{order.orderId}
                                                     </h3>
                                                     <div className="flex items-center gap-2 mt-1">
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${status.bgColor} ${status.textColor}`}>
+                            <span
+                                className={`px-3 py-1 rounded-full text-sm font-medium ${status.bgColor} ${status.textColor}`}>
                               {status.text}
                             </span>
                                                     </div>
@@ -312,29 +317,29 @@ export default function SellerOrders() {
                                         {order.user && (
                                             <div className="bg-gray-50 rounded-lg p-4 mb-4">
                                                 <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                                    <User className="w-4 h-4 text-blue-500" />
+                                                    <User className="w-4 h-4 text-blue-500"/>
                                                     Customer Information
                                                 </h4>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                                                     <div className="flex items-center gap-2">
-                                                        <User className="w-4 h-4 text-gray-600" />
+                                                        <User className="w-4 h-4 text-gray-600"/>
                                                         <span className="font-medium">{order.user.username}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <Mail className="w-4 h-4 text-gray-400" />
+                                                        <Mail className="w-4 h-4 text-gray-400"/>
                                                         <span>{order.user.email}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <Phone className="w-4 h-4 text-gray-400" />
+                                                        <Phone className="w-4 h-4 text-gray-400"/>
                                                         <span>{order.user.phoneNo}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <Home className="w-4 h-4 text-gray-400" />
+                                                        <Home className="w-4 h-4 text-gray-400"/>
                                                         <span>{order.user.hostelName} - {order.user.roomNumber}</span>
                                                     </div>
                                                     {order.user.location && (
                                                         <div className="flex items-center gap-2 md:col-span-2">
-                                                            <MapPin className="w-4 h-4 text-gray-400" />
+                                                            <MapPin className="w-4 h-4 text-gray-400"/>
                                                             <span>{order.user.location}</span>
                                                         </div>
                                                     )}
@@ -345,12 +350,13 @@ export default function SellerOrders() {
                                         {/* Products */}
                                         <div className="mb-4">
                                             <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                                <Package className="w-4 h-4 text-blue-500" />
+                                                <Package className="w-4 h-4 text-blue-500"/>
                                                 Products Ordered
                                             </h4>
                                             <div className="space-y-3">
                                                 {order.products.map((product, index) => (
-                                                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                                    <div key={index}
+                                                         className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                                         <div className="flex-1">
                                                             <h5 className="font-medium text-gray-900">{product.productName}</h5>
                                                             <p className="text-sm text-gray-600">Quantity: {product.quantity}</p>
@@ -360,7 +366,8 @@ export default function SellerOrders() {
                                                                 ${(product.price).toFixed(2)} each
                                                             </div>
                                                             <div className="text-sm text-gray-600">
-                                                                Total: ${((product.price * product.quantity)).toFixed(2)}
+                                                                Total:
+                                                                ${((product.price * product.quantity)).toFixed(2)}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -369,7 +376,8 @@ export default function SellerOrders() {
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                                        <div
+                                            className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                                             {!order.accepted && (
                                                 <button
                                                     onClick={() => handleAcceptOrder(order.orderId)}
@@ -382,12 +390,12 @@ export default function SellerOrders() {
                                                 >
                                                     {isProcessing ? (
                                                         <>
-                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                            <RefreshCw className="w-4 h-4 animate-spin"/>
                                                             Processing...
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <Check className="w-4 h-4" />
+                                                            <Check className="w-4 h-4"/>
                                                             Accept Order
                                                         </>
                                                     )}
@@ -406,12 +414,12 @@ export default function SellerOrders() {
                                                 >
                                                     {isProcessing ? (
                                                         <>
-                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                            <RefreshCw className="w-4 h-4 animate-spin"/>
                                                             Processing...
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <CheckCircle className="w-4 h-4" />
+                                                            <CheckCircle className="w-4 h-4"/>
                                                             Mark Complete
                                                         </>
                                                     )}
@@ -420,7 +428,7 @@ export default function SellerOrders() {
 
                                             {order.completed && (
                                                 <div className="flex items-center gap-2 text-green-600 font-medium">
-                                                    <CheckCircle className="w-4 h-4" />
+                                                    <CheckCircle className="w-4 h-4"/>
                                                     Order Completed
                                                 </div>
                                             )}

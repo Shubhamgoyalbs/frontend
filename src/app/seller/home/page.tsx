@@ -1,31 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 import api from "@/utils/axios";
-import { useAuth } from "@/context/AuthContext";
-import { getUserIdFromToken } from "@/utils/jwtUtils";
-import { Product } from "@/types/Product";
-import {
-    ArrowLeft,
-    Plus,
-    Minus,
-    Trash2,
-    Package,
-    Edit,
-    X,
-    ShoppingCart,
-    Save,
-    RefreshCw,
-    AlertCircle,
-    Check
-} from "lucide-react";
+import {useAuth} from "@/context/AuthContext";
+import {getUserIdFromToken} from "@/utils/jwtUtils";
+import {Product} from "@/types/Product";
+import {AlertCircle, Check, Edit, Minus, Package, Plus, RefreshCw, Trash2, X} from "lucide-react";
 import SellerNavbar from "@/components/seller/SellerNavbar";
+import axios from "axios";
 
 export default function SellerHome() {
-    const router = useRouter();
-    const { token, loading: authLoading } = useAuth();
-    
+    const {token} = useAuth();
+
     // Get seller ID from JWT token
     const sellerId = token ? getUserIdFromToken(token) : null;
 
@@ -39,7 +25,7 @@ export default function SellerHome() {
     const [isAdding, setIsAdding] = useState(false);
     const [editingQuantity, setEditingQuantity] = useState<{ [key: number]: number }>({});
 
-    // Fetch listed products on component load
+    // Fetch listed products on components get load
     useEffect(() => {
         if (sellerId) {
             fetchListedProducts();
@@ -84,11 +70,16 @@ export default function SellerHome() {
             console.log('Delete response:', response.data);
             setListedProducts(prev => prev.filter(p => p.productId !== productId));
             setError("");
-        } catch (err: any) {
+        } catch (err){
             console.error("Error deleting product:", err);
-            console.error("Error response:", err.response?.data);
-            console.error("Error status:", err.response?.status);
-            setError(`Failed to delete product: ${err.response?.data || err.message}`);
+            // You can check if the error is an Axios error to access the response data
+            if (axios.isAxiosError(err) && err.response) {
+                console.error("Error response:", err.response.data);
+                console.error("Error status:", err.response.status);
+                setError(`Failed to delete product: ${err.response.data || err.message}`);
+            } else {
+                setError(`Failed to delete product: ${err instanceof Error ? err.message : 'An unknown error occurred'}`);
+            }
         }
     };
 
@@ -98,10 +89,10 @@ export default function SellerHome() {
         try {
             await api.put(`/api/seller/products/updateProduct/${sellerId}/${productId}/${newQuantity}`);
             setListedProducts(prev =>
-                prev.map(p => p.productId === productId ? { ...p, quantity: newQuantity } : p)
+                prev.map(p => p.productId === productId ? {...p, quantity: newQuantity} : p)
             );
             setEditingQuantity(prev => {
-                const newState = { ...prev };
+                const newState = {...prev};
                 delete newState[productId];
                 return newState;
             });
@@ -157,12 +148,12 @@ export default function SellerHome() {
     };
 
     const startEditingQuantity = (productId: number, currentQuantity: number) => {
-        setEditingQuantity(prev => ({ ...prev, [productId]: currentQuantity }));
+        setEditingQuantity(prev => ({...prev, [productId]: currentQuantity}));
     };
 
     const cancelEditingQuantity = (productId: number) => {
         setEditingQuantity(prev => {
-            const newState = { ...prev };
+            const newState = {...prev};
             delete newState[productId];
             return newState;
         });
@@ -170,9 +161,10 @@ export default function SellerHome() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
+            <div
+                className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
                 <div className="text-center">
-                    <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+                    <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4"/>
                     <p className="text-gray-600">Loading your products...</p>
                 </div>
             </div>
@@ -189,13 +181,13 @@ export default function SellerHome() {
                 {/* Error Message */}
                 {error && (
                     <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                        <AlertCircle className="w-5 h-5 text-red-500" />
+                        <AlertCircle className="w-5 h-5 text-red-500"/>
                         <p className="text-red-700">{error}</p>
                         <button
                             onClick={() => setError("")}
                             className="ml-auto text-red-500 hover:text-red-700"
                         >
-                            <X className="w-4 h-4" />
+                            <X className="w-4 h-4"/>
                         </button>
                     </div>
                 )}
@@ -213,7 +205,7 @@ export default function SellerHome() {
                                     onClick={handleOpenAddModal}
                                     className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30"
                                 >
-                                    <Plus className="w-4 h-4" />
+                                    <Plus className="w-4 h-4"/>
                                     Add Products
                                 </button>
                             </div>
@@ -222,7 +214,7 @@ export default function SellerHome() {
                                 onClick={fetchListedProducts}
                                 className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
                             >
-                                <RefreshCw className="w-4 h-4" />
+                                <RefreshCw className="w-4 h-4"/>
                                 Refresh
                             </button>
                         </div>
@@ -230,8 +222,9 @@ export default function SellerHome() {
 
                     {listedProducts.length === 0 ? (
                         <div className="text-center py-16">
-                            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                                <Package className="w-12 h-12 text-blue-500" />
+                            <div
+                                className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                                <Package className="w-12 h-12 text-blue-500"/>
                             </div>
                             <h3 className="text-2xl font-bold text-gray-900 mb-4">No products listed yet</h3>
                             <p className="text-gray-600 mb-8">Start by adding some products to your store!</p>
@@ -258,8 +251,9 @@ export default function SellerHome() {
                                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-                                                <Package className="w-12 h-12 text-blue-400" />
+                                            <div
+                                                className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+                                                <Package className="w-12 h-12 text-blue-400"/>
                                             </div>
                                         )}
                                     </div>
@@ -297,13 +291,13 @@ export default function SellerHome() {
                                                         onClick={() => handleUpdateQuantity(product.productId, editingQuantity[product.productId])}
                                                         className="p-1 text-green-600 hover:text-green-700"
                                                     >
-                                                        <Check className="w-4 h-4" />
+                                                        <Check className="w-4 h-4"/>
                                                     </button>
                                                     <button
                                                         onClick={() => cancelEditingQuantity(product.productId)}
                                                         className="p-1 text-red-600 hover:text-red-700"
                                                     >
-                                                        <X className="w-4 h-4" />
+                                                        <X className="w-4 h-4"/>
                                                     </button>
                                                 </div>
                                             ) : (
@@ -312,22 +306,23 @@ export default function SellerHome() {
                                                         onClick={() => handleUpdateQuantity(product.productId, Math.max(0, product.quantity - 1))}
                                                         className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition-colors"
                                                     >
-                                                        <Minus className="w-3 h-3" />
+                                                        <Minus className="w-3 h-3"/>
                                                     </button>
-                                                    <span className="font-semibold text-gray-900 min-w-[2rem] text-center">
+                                                    <span
+                                                        className="font-semibold text-gray-900 min-w-[2rem] text-center">
                             {product.quantity}
                           </span>
                                                     <button
                                                         onClick={() => handleUpdateQuantity(product.productId, product.quantity + 1)}
                                                         className="w-6 h-6 rounded-full bg-green-100 hover:bg-green-200 text-green-600 flex items-center justify-center transition-colors"
                                                     >
-                                                        <Plus className="w-3 h-3" />
+                                                        <Plus className="w-3 h-3"/>
                                                     </button>
                                                     <button
                                                         onClick={() => startEditingQuantity(product.productId, product.quantity)}
                                                         className="ml-2 p-1 text-blue-600 hover:text-blue-700 transition-colors"
                                                     >
-                                                        <Edit className="w-4 h-4" />
+                                                        <Edit className="w-4 h-4"/>
                                                     </button>
                                                 </div>
                                             )}
@@ -338,7 +333,7 @@ export default function SellerHome() {
                                             onClick={() => handleDeleteProduct(product.productId)}
                                             className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-4 h-4"/>
                                             Remove Product
                                         </button>
                                     </div>
@@ -359,9 +354,11 @@ export default function SellerHome() {
                     />
 
                     {/* Modal */}
-                    <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-modal-enter">
+                    <div
+                        className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-modal-enter">
                         {/* Header */}
-                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex items-center justify-between">
+                        <div
+                            className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex items-center justify-between">
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900">Add Products</h2>
                                 <p className="text-gray-600">Select products to add to your listing</p>
@@ -370,7 +367,7 @@ export default function SellerHome() {
                                 onClick={handleCloseAddModal}
                                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                             >
-                                <X className="w-6 h-6" />
+                                <X className="w-6 h-6"/>
                             </button>
                         </div>
 
@@ -402,8 +399,9 @@ export default function SellerHome() {
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-                                                    <Package className="w-8 h-8 text-blue-400" />
+                                                <div
+                                                    className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+                                                    <Package className="w-8 h-8 text-blue-400"/>
                                                 </div>
                                             )}
                                         </div>
@@ -411,7 +409,7 @@ export default function SellerHome() {
                                         <p className="text-blue-600 font-bold text-sm">${product.price.toFixed(2)}</p>
                                         {selectedProducts.has(product.productId) && (
                                             <div className="mt-2 flex items-center gap-1 text-green-600 text-sm">
-                                                <Check className="w-4 h-4" />
+                                                <Check className="w-4 h-4"/>
                                                 Selected
                                             </div>
                                         )}
@@ -421,7 +419,7 @@ export default function SellerHome() {
 
                             {nonListedProducts.length === 0 && (
                                 <div className="text-center py-8">
-                                    <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                    <Package className="w-16 h-16 text-gray-300 mx-auto mb-4"/>
                                     <p className="text-gray-500">No products available to add</p>
                                 </div>
                             )}
@@ -445,7 +443,7 @@ export default function SellerHome() {
                                 >
                                     {isAdding ? (
                                         <>
-                                            <RefreshCw className="w-4 h-4 animate-spin inline mr-2" />
+                                            <RefreshCw className="w-4 h-4 animate-spin inline mr-2"/>
                                             Adding...
                                         </>
                                     ) : (

@@ -1,26 +1,26 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { OrderResponseBody, ORBProduct } from "@/types/Order";
-import { orderService } from "@/services/orderService";
-import { getUserIdFromToken, isTokenExpired } from "@/utils/jwtUtils";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
+import {OrderResponseBody} from "@/types/Order";
+import {orderService} from "@/services/orderService";
+import {getUserIdFromToken, isTokenExpired} from "@/utils/jwtUtils";
 import "@/app/globals.css"
 
 
 import {
-    Package,
-    User,
-    Mail,
-    Phone,
-    Home,
-    MapPin,
-    CreditCard,
     CheckCircle,
     Clock,
-    X,
+    CreditCard,
     Eye,
-    ShoppingBag
+    Home,
+    Mail,
+    MapPin,
+    Package,
+    Phone,
+    ShoppingBag,
+    User,
+    X
 } from "lucide-react";
 import {LoadingPage} from "@/components/LoadingPage";
 import UserNavbar from "@/components/user/UserNavbar";
@@ -32,7 +32,7 @@ interface OrderDetailModalProps {
     onClose: () => void;
 }
 
-function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
+function OrderDetailModal({order, isOpen, onClose}: OrderDetailModalProps) {
     if (!isOpen) return null;
 
     const formatPrice = (priceInCents: number): string => {
@@ -48,9 +48,11 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
             />
 
             {/* Modal */}
-            <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-modal-enter">
+            <div
+                className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-modal-enter">
                 {/* Header */}
-                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex items-center justify-between">
+                <div
+                    className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex items-center justify-between">
                     <div>
                         <h2 className="text-2xl font-bold text-gray-900">Order Details</h2>
                         <p className="text-gray-600">#{order.orderId}</p>
@@ -59,7 +61,7 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
                         onClick={onClose}
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                     >
-                        <X className="w-6 h-6 text-black/60" />
+                        <X className="w-6 h-6 text-black/60"/>
                     </button>
                 </div>
 
@@ -74,9 +76,9 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
                                             'bg-yellow-100'
                                 }`}>
                                     {order.completed ? (
-                                        <CheckCircle className="w-5 h-5 text-green-600" />
+                                        <CheckCircle className="w-5 h-5 text-green-600"/>
                                     ) : (
-                                        <Clock className="w-5 h-5 text-blue-600" />
+                                        <Clock className="w-5 h-5 text-blue-600"/>
                                     )}
                                 </div>
                                 <div>
@@ -94,11 +96,12 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
                     {order.seller && (
                         <div className="bg-white border border-gray-200 rounded-xl p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                <User className="w-5 h-5 text-blue-500" />
+                                <User className="w-5 h-5 text-blue-500"/>
                                 Seller Information
                             </h3>
                             <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
                                     {order.seller.profileImage ? (
                                         <img
                                             src={order.seller.profileImage}
@@ -106,27 +109,27 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
                                             className="w-full h-full object-cover rounded-full"
                                         />
                                     ) : (
-                                        <User className="w-8 h-8 text-white" />
+                                        <User className="w-8 h-8 text-white"/>
                                     )}
                                 </div>
                                 <div className="flex-1">
                                     <h4 className="text-xl font-semibold text-gray-900">{order.seller.username}</h4>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 text-sm text-gray-600">
                                         <div className="flex items-center gap-2">
-                                            <Mail className="w-4 h-4 text-blue-500" />
+                                            <Mail className="w-4 h-4 text-blue-500"/>
                                             <span>{order.seller.email}</span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Phone className="w-4 h-4 text-blue-500" />
+                                            <Phone className="w-4 h-4 text-blue-500"/>
                                             <span>{order.seller.phoneNo}</span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Home className="w-4 h-4 text-blue-500" />
+                                            <Home className="w-4 h-4 text-blue-500"/>
                                             <span>{order.seller.hostelName} - {order.seller.roomNumber}</span>
                                         </div>
                                         {order.seller.location && (
                                             <div className="flex items-center gap-2">
-                                                <MapPin className="w-4 h-4 text-blue-500" />
+                                                <MapPin className="w-4 h-4 text-blue-500"/>
                                                 <span>{order.seller.location}</span>
                                             </div>
                                         )}
@@ -139,21 +142,23 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
                     {/* Order Items */}
                     <div className="bg-white border border-gray-200 rounded-xl p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                            <Package className="w-5 h-5 text-blue-500" />
+                            <Package className="w-5 h-5 text-blue-500"/>
                             Order Items ({order.products.length})
                         </h3>
                         <div className="space-y-4">
                             {order.products.map((product, index) => (
                                 <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                                     <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-                                            <Package className="w-6 h-6 text-blue-400" />
+                                        <div
+                                            className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+                                            <Package className="w-6 h-6 text-blue-400"/>
                                         </div>
                                     </div>
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-gray-900">{product.productName}</h4>
                                         <div className="flex items-center gap-4 mt-2">
-                                            <span className="text-blue-600 font-semibold">${formatPrice(product.price)}</span>
+                                            <span
+                                                className="text-blue-600 font-semibold">${formatPrice(product.price)}</span>
                                             <span className="text-gray-500">Qty: {product.quantity}</span>
                                         </div>
                                     </div>
@@ -172,7 +177,7 @@ function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                                    <CreditCard className="w-5 h-5 text-blue-500" />
+                                    <CreditCard className="w-5 h-5 text-blue-500"/>
                                     Order Total
                                 </h3>
                                 <p className="text-sm text-gray-600 mt-1">Final amount for this order</p>
@@ -207,7 +212,7 @@ export default function OrdersPage() {
 
                 // Get JWT token from localStorage
                 const token = localStorage.getItem('token');
-                
+
                 if (!token) {
                     setError('Please login to view your orders');
                     router.push('/login');
@@ -232,7 +237,7 @@ export default function OrdersPage() {
                 }
 
                 // Call the API
-                const ordersData = await orderService.getAllOrders(userId, token);
+                const ordersData = await orderService.getAllOrders(userId);
                 setOrders(ordersData);
             } catch (err) {
                 console.error('Error fetching orders:', err);
@@ -261,11 +266,14 @@ export default function OrdersPage() {
 
     const getStatusBadge = (order: OrderResponseBody) => {
         if (order.completed) {
-            return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Completed</span>;
+            return <span
+                className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Completed</span>;
         } else if (order.accepted) {
-            return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Accepted</span>;
+            return <span
+                className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Accepted</span>;
         } else {
-            return <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">Pending</span>;
+            return <span
+                className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">Pending</span>;
         }
     };
 
@@ -287,8 +295,9 @@ export default function OrdersPage() {
 
                 <div className="max-w-7xl mx-auto px-4 py-8">
                     <div className="text-center py-16">
-                        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
-                            <X className="w-12 h-12 text-red-500" />
+                        <div
+                            className="w-24 h-24 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
+                            <X className="w-12 h-12 text-red-500"/>
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Orders</h2>
                         <p className="text-gray-600 mb-8">{error}</p>
@@ -313,11 +322,13 @@ export default function OrdersPage() {
                 {/* Orders List */}
                 {orders.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                            <ShoppingBag className="w-12 h-12 text-blue-500" />
+                        <div
+                            className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                            <ShoppingBag className="w-12 h-12 text-blue-500"/>
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">No orders yet</h2>
-                        <p className="text-gray-600 mb-8">You haven&apos;t placed any orders. Start shopping to see your orders here!</p>
+                        <p className="text-gray-600 mb-8">You haven&apos;t placed any orders. Start shopping to see your
+                            orders here!</p>
                         <button
                             onClick={() => router.push("/user/home")}
                             className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
@@ -365,13 +376,15 @@ export default function OrdersPage() {
                                                 <div className="flex items-center gap-6 text-sm">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-gray-600">Accepted:</span>
-                                                        <span className={order.accepted ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
+                                                        <span
+                                                            className={order.accepted ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
                               {order.accepted ? "✅ Yes" : "❌ No"}
                             </span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-gray-600">Completed:</span>
-                                                        <span className={order.completed ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
+                                                        <span
+                                                            className={order.completed ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
                               {order.completed ? "✅ Yes" : "❌ No"}
                             </span>
                                                     </div>
@@ -389,7 +402,7 @@ export default function OrdersPage() {
                                                 onClick={() => handleViewOrder(order)}
                                                 className="group flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30"
                                             >
-                                                <Eye className="w-4 h-4 group-hover:animate-blink" />
+                                                <Eye className="w-4 h-4 group-hover:animate-blink"/>
                                                 View Order
                                             </button>
                                         </div>

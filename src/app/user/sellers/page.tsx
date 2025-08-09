@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useMemo, useState, Suspense} from "react";
+import {Suspense, useEffect, useMemo, useState} from "react";
 import {usePathname, useSearchParams} from "next/navigation";
 import api from "@/utils/axios";
 import axios from "axios";
@@ -186,8 +186,8 @@ function SellersContent() {
 
 export default function Sellers() {
     return (
-        <Suspense fallback={<LoadingPage />}>
-            <SellersContent />
+        <Suspense fallback={<LoadingPage/>}>
+            <SellersContent/>
         </Suspense>
     );
 }
