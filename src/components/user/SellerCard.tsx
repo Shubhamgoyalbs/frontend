@@ -3,6 +3,7 @@
 import {SellerInfo} from "@/types/ProductSeller";
 import {Home, Mail, MapPin, Package, Phone, User} from "lucide-react";
 import {useRouter} from "next/navigation";
+import Image from "next/image";
 
 interface SellerCardProps {
     seller: SellerInfo;
@@ -32,7 +33,7 @@ export function SellerCard({seller}: SellerCardProps) {
                         <div
                             className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300 group-hover:scale-110">
                             {seller.profileImage ? (
-                                <img
+                                <Image
                                     src={seller.profileImage}
                                     alt={seller.username}
                                     className="w-full h-full object-cover rounded-full"

@@ -25,6 +25,7 @@ import {useCart} from "@/context/CartContext";
 import api from "@/utils/axios";
 import axios from "axios";
 import {LoadingPage} from "@/components/LoadingPage";
+import Image from "next/image";
 
 function SellerDetailContent() {
     const searchParams = useSearchParams();
@@ -142,7 +143,7 @@ function SellerDetailContent() {
                                 <div
                                     className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
                                     {seller.profileImage ? (
-                                        <img
+                                        <Image
                                             src={seller.profileImage}
                                             alt={seller.username}
                                             className="w-full h-full object-cover rounded-full"

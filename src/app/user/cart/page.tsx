@@ -5,7 +5,6 @@ import {useCart} from "@/context/CartContext";
 import {useAuth} from "@/context/AuthContext";
 import {useEffect, useState} from "react";
 import {
-    ArrowLeft,
     CheckCircle,
     CreditCard,
     Home,

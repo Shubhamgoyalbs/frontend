@@ -70,7 +70,7 @@ export default function SellerHome() {
             console.log('Delete response:', response.data);
             setListedProducts(prev => prev.filter(p => p.productId !== productId));
             setError("");
-        } catch (err){
+        } catch (err) {
             console.error("Error deleting product:", err);
             // You can check if the error is an Axios error to access the response data
             if (axios.isAxiosError(err) && err.response) {

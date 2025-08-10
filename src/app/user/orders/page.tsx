@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import {LoadingPage} from "@/components/LoadingPage";
 import UserNavbar from "@/components/user/UserNavbar";
+import Image from "next/image";
 
 
 interface OrderDetailModalProps {
@@ -103,7 +104,7 @@ function OrderDetailModal({order, isOpen, onClose}: OrderDetailModalProps) {
                                 <div
                                     className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
                                     {order.seller.profileImage ? (
-                                        <img
+                                        <Image
                                             src={order.seller.profileImage}
                                             alt={order.seller.username}
                                             className="w-full h-full object-cover rounded-full"

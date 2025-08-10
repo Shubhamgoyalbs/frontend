@@ -1,5 +1,6 @@
 import {Product} from '@/types/Product';
 import {useRouter} from "next/navigation";
+import Image from "next/image";
 
 interface ProductCardProps {
     product: Product;
@@ -27,7 +28,7 @@ export function ProductCard({product, productId}: ProductCardProps) {
             className="group relative bg-white  rounded-2xl shadow-sm border border-gray-200  overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             {/* Product Image */}
             <div className="aspect-square overflow-hidden bg-gray-100 ">
-                <img
+                <Image
                     src={product.imageUrl}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
