@@ -52,14 +52,14 @@ Comprehensive JWT token utilities for decoding and validating tokens.
 import axios from 'axios';
 
 const response = await axios.get('/api/endpoint', {
-  headers: {
-    'Authorization': `Bearer ${token}`,
-  },
+    headers: {
+        'Authorization': `Bearer ${token}`,
+    },
 });
 
 // Manual error handling
 if (response.status === 401) {
-  logout();
+    logout();
 }
 ```
 

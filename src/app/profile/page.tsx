@@ -1,7 +1,7 @@
 "use client"
 
-import {useEffect, useState, useCallback} from "react";
-import axios, {AxiosError} from "axios";
+import {useCallback, useEffect, useState} from "react";
+import axios from "axios";
 import {
     AlertCircle,
     Camera,
@@ -347,7 +347,7 @@ export default function Profile() {
                                 <div
                                     className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center overflow-hidden border-2 border-white/30">
                                     {profile.profileImage ? (
-                                        <Image
+                                        <img
                                             src={profile.profileImage}
                                             alt={profile.username}
                                             width={80}

@@ -1,6 +1,5 @@
 import {Product} from "@/types/Product";
 import {Package, ShoppingCart} from "lucide-react";
-import Image from "next/image";
 
 interface ProductCardProps {
     product: Product;
@@ -16,7 +15,7 @@ export function ProductCardS({product, isInCart, onAddToCart, onGoToCart}: Produ
             {/* Product Image */}
             <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
                 {product.imageUrl ? (
-                    <Image
+                    <img
                         src={product.imageUrl}
                         alt={product.name}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
