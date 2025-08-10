@@ -347,12 +347,11 @@ export default function Profile() {
                                 <div
                                     className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center overflow-hidden border-2 border-white/30">
                                     {profile.profileImage ? (
-                                        // Fix: Replaced <img> with <Image>
                                         <Image
                                             src={profile.profileImage}
                                             alt={profile.username}
-                                            width={80} // Add explicit width
-                                            height={80} // Add explicit height
+                                            width={80}
+                                            height={80}
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
@@ -381,7 +380,260 @@ export default function Profile() {
 
                     {/* Profile Fields */}
                     <div className="p-6 space-y-6">
-                        {/* ... (fields remain the same) ... */}
+                        {/* Username */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <User className="w-5 h-5 text-blue-500"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Username</label>
+                                    {isFieldEditing("username") ? (
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <input
+                                                type="text"
+                                                value={profile.username}
+                                                onChange={(e) => handleFieldChange("username", e.target.value)}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                            <button
+                                                onClick={() => setEditingFields(prev => {
+                                                    const newSet = new Set(prev);
+                                                    newSet.delete("username");
+                                                    return newSet;
+                                                })}
+                                                className="p-2 text-green-600 hover:text-green-700"
+                                            >
+                                                <Check className="w-4 h-4"/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleFieldCancel("username")}
+                                                className="p-2 text-red-600 hover:text-red-700"
+                                            >
+                                                <X className="w-4 h-4"/>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="font-semibold text-gray-900 mt-1">{profile.username}</p>
+                                    )}
+                                </div>
+                            </div>
+                            {!isFieldEditing("username") && (
+                                <button
+                                    onClick={() => handleFieldEdit("username")}
+                                    className="p-2 text-blue-600 hover:text-blue-700 transition-colors"
+                                >
+                                    <Edit3 className="w-4 h-4"/>
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Email (Non-editable) */}
+                        <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <Mail className="w-5 h-5 text-gray-400"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Email</label>
+                                    <p className="font-semibold text-gray-700 mt-1">{profile.email}</p>
+                                </div>
+                            </div>
+                            <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Non-editable</span>
+                        </div>
+
+                        {/* Phone Number */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <Phone className="w-5 h-5 text-blue-500"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Phone Number</label>
+                                    {isFieldEditing("phoneNo") ? (
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <input
+                                                type="tel"
+                                                value={profile.phoneNo}
+                                                onChange={(e) => handleFieldChange("phoneNo", e.target.value)}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                            <button
+                                                onClick={() => setEditingFields(prev => {
+                                                    const newSet = new Set(prev);
+                                                    newSet.delete("phoneNo");
+                                                    return newSet;
+                                                })}
+                                                className="p-2 text-green-600 hover:text-green-700"
+                                            >
+                                                <Check className="w-4 h-4"/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleFieldCancel("phoneNo")}
+                                                className="p-2 text-red-600 hover:text-red-700"
+                                            >
+                                                <X className="w-4 h-4"/>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="font-semibold text-gray-900 mt-1">{profile.phoneNo}</p>
+                                    )}
+                                </div>
+                            </div>
+                            {!isFieldEditing("phoneNo") && (
+                                <button
+                                    onClick={() => handleFieldEdit("phoneNo")}
+                                    className="p-2 text-blue-600 hover:text-blue-700 transition-colors"
+                                >
+                                    <Edit3 className="w-4 h-4"/>
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Hostel Name */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <Home className="w-5 h-5 text-blue-500"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Hostel Name</label>
+                                    {isFieldEditing("hostelName") ? (
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <input
+                                                type="text"
+                                                value={profile.hostelName}
+                                                onChange={(e) => handleFieldChange("hostelName", e.target.value)}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                            <button
+                                                onClick={() => setEditingFields(prev => {
+                                                    const newSet = new Set(prev);
+                                                    newSet.delete("hostelName");
+                                                    return newSet;
+                                                })}
+                                                className="p-2 text-green-600 hover:text-green-700"
+                                            >
+                                                <Check className="w-4 h-4"/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleFieldCancel("hostelName")}
+                                                className="p-2 text-red-600 hover:text-red-700"
+                                            >
+                                                <X className="w-4 h-4"/>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="font-semibold text-gray-900 mt-1">{profile.hostelName}</p>
+                                    )}
+                                </div>
+                            </div>
+                            {!isFieldEditing("hostelName") && (
+                                <button
+                                    onClick={() => handleFieldEdit("hostelName")}
+                                    className="p-2 text-blue-600 hover:text-blue-700 transition-colors"
+                                >
+                                    <Edit3 className="w-4 h-4"/>
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Room Number */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <Home className="w-5 h-5 text-blue-500"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Room Number</label>
+                                    {isFieldEditing("roomNumber") ? (
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <input
+                                                type="text"
+                                                value={profile.roomNumber}
+                                                onChange={(e) => handleFieldChange("roomNumber", e.target.value)}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                            <button
+                                                onClick={() => setEditingFields(prev => {
+                                                    const newSet = new Set(prev);
+                                                    newSet.delete("roomNumber");
+                                                    return newSet;
+                                                })}
+                                                className="p-2 text-green-600 hover:text-green-700"
+                                            >
+                                                <Check className="w-4 h-4"/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleFieldCancel("roomNumber")}
+                                                className="p-2 text-red-600 hover:text-red-700"
+                                            >
+                                                <X className="w-4 h-4"/>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="font-semibold text-gray-900 mt-1">{profile.roomNumber}</p>
+                                    )}
+                                </div>
+                            </div>
+                            {!isFieldEditing("roomNumber") && (
+                                <button
+                                    onClick={() => handleFieldEdit("roomNumber")}
+                                    className="p-2 text-blue-600 hover:text-blue-700 transition-colors"
+                                >
+                                    <Edit3 className="w-4 h-4"/>
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Role (Non-editable) */}
+                        <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <Shield className="w-5 h-5 text-gray-400"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Role</label>
+                                    <p className="font-semibold text-gray-700 mt-1 capitalize">{role}</p>
+                                </div>
+                            </div>
+                            <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Non-editable</span>
+                        </div>
+
+                        {/* Location */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                                <MapPin className="w-5 h-5 text-blue-500"/>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-600">Location</label>
+                                    {isFieldEditing("location") ? (
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <input
+                                                type="text"
+                                                value={profile.location || ""}
+                                                onChange={(e) => handleFieldChange("location", e.target.value)}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Enter location"
+                                            />
+                                            <button
+                                                onClick={() => setEditingFields(prev => {
+                                                    const newSet = new Set(prev);
+                                                    newSet.delete("location");
+                                                    return newSet;
+                                                })}
+                                                className="p-2 text-green-600 hover:text-green-700"
+                                            >
+                                                <Check className="w-4 h-4"/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleFieldCancel("location")}
+                                                className="p-2 text-red-600 hover:text-red-700"
+                                            >
+                                                <X className="w-4 h-4"/>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="font-semibold text-gray-900 mt-1">{profile.location || "Not specified"}</p>
+                                    )}
+                                </div>
+                            </div>
+                            {!isFieldEditing("location") && (
+                                <button
+                                    onClick={() => handleFieldEdit("location")}
+                                    className="p-2 text-blue-600 hover:text-blue-700 transition-colors"
+                                >
+                                    <Edit3 className="w-4 h-4"/>
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* Action Buttons */}
@@ -502,12 +754,11 @@ export default function Profile() {
                                     </label>
                                     <div
                                         className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 mx-auto border-2 border-blue-200">
-                                        {/* Fix: Replaced <img> with <Image> */}
                                         <Image
                                             src={previewUrl}
                                             alt="Preview"
-                                            width={96} // Add explicit width
-                                            height={96} // Add explicit height
+                                            width={96}
+                                            height={96}
                                             className="w-full h-full object-cover"
                                         />
                                     </div>
