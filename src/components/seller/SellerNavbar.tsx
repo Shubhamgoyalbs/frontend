@@ -56,7 +56,7 @@ export default function SellerNavbar() {
 
                 {/* Desktop Right Side - Cart and Profile */}
                 <div className="hidden md:flex items-center space-x-3">
-                    <Link href="/user/profile" className="flex items-center group">
+                    <Link href="/profile" className="flex items-center group">
                         <div
                             className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold group-hover:scale-105 transition-transform duration-200 shadow-lg">
                             👤
@@ -90,7 +90,7 @@ export default function SellerNavbar() {
                         <NavLink href="/login" isMobile={true}>Login</NavLink>
                         <NavLink href="/user/orders" isMobile={true}>Orders</NavLink>
 
-                        <Link href="/user/profile"
+                        <Link href="/profile"
                               className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 px-2 rounded-lg hover:bg-white/40">
                             <div
                                 className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center text-white text-xs font-bold">

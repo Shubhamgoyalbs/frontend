@@ -64,7 +64,7 @@ export default function UserNavbar() {
                                   d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.68 3.4a1 1 0 00.9 1.6h9.78M7 13v6a2 2 0 002 2h4a2 2 0 002-2v-6m-6 0a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
                     </Link>
-                    <Link href="/user/profile" className="flex items-center group">
+                    <Link href="/profile" className="flex items-center group">
                         <div
                             className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold group-hover:scale-105 transition-transform duration-200 shadow-lg">
                             👤
@@ -107,7 +107,7 @@ export default function UserNavbar() {
                             <span>Cart</span>
                         </Link>
 
-                        <Link href="/user/profile"
+                        <Link href="/profile"
                               className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 px-2 rounded-lg hover:bg-white/40">
                             <div
                                 className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center text-white text-xs font-bold">
