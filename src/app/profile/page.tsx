@@ -151,12 +151,12 @@ export default function Profile() {
             const updateData: Partial<SellerInfo> = {};
 
             // Only include changed fields
-            if (profile.username !== originalProfile?.username) updateData.username = profile.username;
-            if (profile.phoneNo !== originalProfile?.phoneNo) updateData.phoneNo = profile.phoneNo;
-            if (profile.hostelName !== originalProfile?.hostelName) updateData.hostelName = profile.hostelName;
-            if (profile.roomNumber !== originalProfile?.roomNumber) updateData.roomNumber = profile.roomNumber;
-            if (profile.location !== originalProfile?.location) updateData.location = profile.location;
-            if (profile.profileImage !== originalProfile?.profileImage) updateData.profileImage = profile.profileImage;
+            updateData.username = profile.username;
+            updateData.phoneNo = profile.phoneNo;
+            updateData.hostelName = profile.hostelName;
+            updateData.roomNumber = profile.roomNumber;
+            updateData.location = profile.location;
+            updateData.profileImage = profile.profileImage;
 
             const response = await api.put(`/api/profile/update/${userId}`, updateData);
 
