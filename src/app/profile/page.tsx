@@ -263,9 +263,9 @@ export default function Profile() {
                 return;
             }
 
-            const updateData = {profileImage: imageUrl}
+            profile.profileImage = imageUrl;
 
-            await api.put(`/api/profile/update/${userId}`, updateData);
+            await api.put(`/api/profile/update/${userId}`, profile);
 
             setProfile(prev => prev ? {...prev, profileImage: imageUrl} : null);
             setOriginalProfile(prev => prev ? {...prev, profileImage: imageUrl} : null);
