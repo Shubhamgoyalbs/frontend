@@ -154,22 +154,11 @@ export default function CartPage() {
     // Empty cart state
     if (cartItems.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
-                {/* Header */}
-                <header className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-50">
-                    <div className="max-w-7xl mx-auto px-4 py-4">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => router.push("/user/home")}
-                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-                            >
-                                <ArrowLeft className="w-5 h-5"/>
-                                Back to Products
-                            </button>
-                            <h1 className="text-2xl font-bold text-gray-900">Shopping Cart</h1>
-                        </div>
-                    </div>
-                </header>
+            <div className="min-h-screen pt-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
+
+                {/*navbar*/}
+
+                <UserNavbar/>
 
                 {/* Empty cart content */}
                 <div className="max-w-4xl mx-auto px-4 py-16">

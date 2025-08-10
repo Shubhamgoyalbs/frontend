@@ -22,6 +22,7 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
     '/seller': ['SELLER', 'ADMIN'],
     '/seller/home': ['SELLER', 'ADMIN'],
     '/admin': ['ADMIN'],
+    '/profile':['ADMIN','SELLER','USER']
 };
 
 const UnauthorizedPage = () => (

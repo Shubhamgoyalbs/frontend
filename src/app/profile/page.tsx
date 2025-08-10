@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { UserProfile, UpdateProfileRequest } from "@shared/api";
 import {
     ArrowLeft,
     User,
@@ -26,6 +25,10 @@ import {LoadingPage} from "@/components/LoadingPage";
 import {useAuth} from "@/context/AuthContext";
 import {SellerInfo} from "@/types/ProductSeller";
 import {getUserIdFromToken} from "@/utils/jwtUtils";
+import api from "@/utils/axios";
+import UserNavbar from "@/components/user/UserNavbar";
+import SellerNavbar from "@/components/seller/SellerNavbar";
+import {throws} from "node:assert";
 
 
 export default function Profile() {
@@ -42,30 +45,57 @@ export default function Profile() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string>("");
     const [hasChanges, setHasChanges] = useState(false);
-    const {role,token,logout} = useAuth();
-    if (!token){
-        logout();
-    }
-    const userId :number | null = getUserIdFromToken(token);
+    const {role, token, logout, loading} = useAuth();
+    const CLOUDINARY_CLOUD_NAME = "dsly26h0t"
+    const CLOUDINARY_UPLOAD_PRESET = "unsigned_profile_uploads"
 
-    // Fetch profile on component load
+
+    // Get userId from token safely
+    const userId: number | null = token ? getUserIdFromToken(token) : null;
+
+    // Fetch profile on the component load
     useEffect(() => {
-        fetchProfile();
-    }, [userId]);
+        // Wait for auth loading to complete
+        if (loading) return;
+
+        // If no token, logout user
+        if (!token) {
+            logout();
+            return;
+        }
+
+        // If token exists but no userId found, handle error
+        if (token && !userId) {
+            setError("Invalid user session. Please login again.");
+            setPageLoading(false);
+            return;
+        }
+
+        // Only fetch if we have a valid userId
+        if (userId) {
+            fetchProfile();
+        }
+    }, [token, userId, loading, logout]);
 
     // Check for changes
     useEffect(() => {
         if (profile && originalProfile) {
-            const changed = JSON.stringify(profile) !== JSON.stringify(originalProfile);
-            setHasChanges(changed);
+            setHasChanges(true);
         }
     }, [profile, originalProfile]);
 
     const fetchProfile = async () => {
+        // Safety check for userId
+        if (!userId) {
+            setError("User ID not found. Please login again.");
+            setPageLoading(false);
+            return;
+        }
+
         try {
             setPageLoading(true);
             setError("");
-            const response = await axios.get(`/api/profile/${userId}`);
+            const response = await api.get(`/api/profile/fetch/${userId}`);
             setProfile(response.data);
             setOriginalProfile(response.data);
         } catch (err) {
@@ -98,7 +128,14 @@ export default function Profile() {
     };
 
     const handleSaveChanges = async () => {
-        if (!profile || !hasChanges) return;
+        if (!profile || !hasChanges || !userId) return;
+
+        // Additional safety checks
+        if (!token) {
+            setError("Session expired. Please login again.");
+            logout();
+            return;
+        }
 
         try {
             setSaving(true);
@@ -107,7 +144,7 @@ export default function Profile() {
             const updateData: SellerInfo | null = originalProfile;
 
             if (updateData == null){
-                throw new error();
+                throw new Error("Failed to get original profile data");
             }
 
             // Only include changed fields
@@ -118,7 +155,7 @@ export default function Profile() {
             if (profile.location !== originalProfile?.location) updateData.location = profile.location;
             if (profile.profileImage !== originalProfile?.profileImage) updateData.profileImage = profile.profileImage;
 
-            const response = await axios.put(`/api/profile/${userId}`, updateData);
+            const response = await api.put(`/api/profile/update/${userId}`, updateData);
 
             setOriginalProfile(response.data.profile);
             setEditingFields(new Set());
@@ -145,9 +182,7 @@ export default function Profile() {
         }
 
         try {
-            await axios.post("/api/auth/logout");
-            // In a real app, you would clear auth tokens, redirect to login, etc.
-            router.push("/");
+            logout()
         } catch (err) {
             console.error("Error logging out:", err);
             // Still redirect even if logout API fails
@@ -155,42 +190,8 @@ export default function Profile() {
         }
     };
 
-    // Image compression function
-    const compressImage = (file: File, maxWidth: number = 400, quality: number = 0.8): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
 
-            img.onload = () => {
-                // Calculate new dimensions
-                const { width, height } = img;
-                const aspectRatio = width / height;
-
-                let newWidth = Math.min(width, maxWidth);
-                let newHeight = newWidth / aspectRatio;
-
-                if (newHeight > maxWidth) {
-                    newHeight = maxWidth;
-                    newWidth = newHeight * aspectRatio;
-                }
-
-                // Set canvas dimensions
-                canvas.width = newWidth;
-                canvas.height = newHeight;
-
-                // Draw and compress
-                ctx?.drawImage(img, 0, 0, newWidth, newHeight);
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-                resolve(compressedDataUrl);
-            };
-
-            img.onerror = () => reject(new Error('Failed to load image'));
-            img.src = URL.createObjectURL(file);
-        });
-    };
-
-    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             // Validate file type
@@ -207,60 +208,10 @@ export default function Profile() {
 
             setSelectedFile(file);
 
-            try {
-                // Create compressed preview
-                const compressedDataUrl = await compressImage(file, 200, 0.8);
-                setPreviewUrl(compressedDataUrl);
-                setError("");
-            } catch (err) {
-                setError("Failed to process image");
-                console.error("Error processing image:", err);
-            }
-        }
-    };
-
-    const handleImageUpload = async () => {
-        if (!selectedFile) {
-            setError("Please select an image file");
-            return;
-        }
-
-        try {
-            setSaving(true);
-
-            // In a real app, you would upload the file to a file storage service
-            // For this demo, we'll convert to base64 and store it
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                if (e.target?.result) {
-                    const imageDataUrl = e.target.result as string;
-
-                    try {
-                        await axios.post(`/api/profile/${userId}/upload-image`, { imageUrl: imageDataUrl });
-
-                        if (profile) {
-                            setProfile({ ...profile, profileImage: imageDataUrl });
-                        }
-
-                        setIsImageModalOpen(false);
-                        setSelectedFile(null);
-                        setPreviewUrl("");
-                        setError("");
-                    } catch (err: any) {
-                        const errorMessage = err.response?.data?.error || "Failed to upload image";
-                        setError(errorMessage);
-                        console.error("Error uploading image:", err);
-                    } finally {
-                        setSaving(false);
-                    }
-                }
-            };
-            reader.readAsDataURL(selectedFile);
-        } catch (err: any) {
-            const errorMessage = err.response?.data?.error || "Failed to process image";
-            setError(errorMessage);
-            console.error("Error processing image:", err);
-            setSaving(false);
+            // Create preview URL directly from the file
+            const fileUrl = URL.createObjectURL(file);
+            setPreviewUrl(fileUrl);
+            setError("");
         }
     };
 
@@ -270,9 +221,72 @@ export default function Profile() {
         setError("");
     };
 
+    const handleImageUpload = async () => {
+        if (!selectedFile || !userId) {
+            setError(!selectedFile ? "Please select an image file" : "User ID not found");
+            return;
+        }
+
+        // Check for valid session
+        if (!token) {
+            setError("Session expired. Please login again.");
+            logout();
+            return;
+        }
+
+        try {
+            setSaving(true);
+
+            /// Step 1: Upload image to Cloudinary
+            // Create a FormData object to send the file
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+            formData.append("cloud_name", CLOUDINARY_CLOUD_NAME);
+
+            // Make the POST request to the Cloudinary upload endpoint
+            const cloudinaryResponse = await axios.post(
+                `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+                formData,
+                {
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                }
+            );
+
+            // Get the secure URL from the Cloudinary response
+            const imageUrl = cloudinaryResponse.data.secure_url;
+            console.log("Cloudinary URL:", imageUrl);
+
+            // Step 2: Call your backend API to update the user's profile with the new image URL
+            // This assumes your backend has an endpoint for updating user profiles
+            if (!profile){
+                return;
+            }
+
+            handleFieldChange("profileImage",imageUrl)
+            await handleSaveChanges();
+
+            setIsImageModalOpen(false);
+            clearSelectedFile();
+            setError("");
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.error || "Failed to process image";
+            setError(errorMessage);
+            console.error("Error processing image:", err);
+            setSaving(false);
+        }
+    };
+
+
     const isFieldEditing = (fieldName: string) => editingFields.has(fieldName);
 
-    if (pageLoading) {
+    // Show loading while auth is being checked
+    if (loading || pageLoading) {
+        return <LoadingPage/>;
+    }
+
+    // If no token after auth loading is complete, don't render anything (logout will redirect)
+    if (!token || !userId) {
         return <LoadingPage/>;
     }
 
@@ -295,27 +309,12 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
-            {/* Header */}
-            <header className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-40">
-                <div className="max-w-4xl mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => router.push("/")}
-                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-                            >
-                                <ArrowLeft className="w-5 h-5" />
-                                Back to Home
-                            </button>
-                            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                                <User className="w-6 h-6 text-blue-500" />
-                                My Profile
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-            </header>
+        <div className="min-h-screen pt-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
+
+            {/*navbar*/}
+
+            {role==="USER" && <UserNavbar/>}
+            {role==="SELLER" && <SellerNavbar/>}
 
             <div className="max-w-4xl mx-auto px-4 py-8">
                 {/* Error Message */}
@@ -362,7 +361,7 @@ export default function Profile() {
                                 <div className="flex items-center gap-2 mt-2">
                                     <Shield className="w-4 h-4" />
                                     <span className="text-sm bg-white/20 px-2 py-1 rounded-full capitalize">
-                    {profile.role}
+                    {role}
                   </span>
                                 </div>
                             </div>
