@@ -406,7 +406,7 @@ export default function SellerHome() {
                                             )}
                                         </div>
                                         <h3 className="font-semibold text-gray-900 text-sm line-clamp-2">{product.name}</h3>
-                                        <p className="text-blue-600 font-bold text-sm">${product.price.toFixed(2)}</p>
+                                        <p className="text-blue-600 font-bold text-sm">₹{product.price.toFixed(2)}</p>
                                         {selectedProducts.has(product.productId) && (
                                             <div className="mt-2 flex items-center gap-1 text-green-600 text-sm">
                                                 <Check className="w-4 h-4"/>

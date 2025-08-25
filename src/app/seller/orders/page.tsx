@@ -11,7 +11,7 @@ import {
     Check,
     CheckCircle,
     Clock,
-    DollarSign,
+    IndianRupee ,
     Home,
     Mail,
     MapPin,
@@ -36,8 +36,10 @@ export default function SellerOrders() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>("");
     const [processingOrders, setProcessingOrders] = useState<Set<number>>(new Set());
+    const sortedOrders = [...orders].sort((a, b) => b.orderId - a.orderId);
 
-    // Fetch orders on component load  
+
+    // Fetch orders on component load
     useEffect(() => {
         const loadOrders = async () => {
             if (sellerId) {
@@ -240,10 +242,10 @@ export default function SellerOrders() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-600 text-sm">Revenue</p>
-                                <p className="text-3xl font-bold text-purple-600">${(stats.totalRevenue / 100).toFixed(2)}</p>
+                                <p className="text-3xl font-bold text-purple-600">₹{(stats.totalRevenue / 100).toFixed(2)}</p>
                             </div>
                             <div className="bg-purple-100 p-3 rounded-lg">
-                                <DollarSign className="w-6 h-6 text-purple-600"/>
+                                <IndianRupee  className="w-6 h-6 text-purple-600"/>
                             </div>
                         </div>
                     </div>
@@ -282,7 +284,7 @@ export default function SellerOrders() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {orders.map((order) => {
+                            {sortedOrders.map((order) => {
                                 const status = getOrderStatus(order);
                                 const isProcessing = processingOrders.has(order.orderId);
 
@@ -298,16 +300,16 @@ export default function SellerOrders() {
                                                         Order #{order.orderId}
                                                     </h3>
                                                     <div className="flex items-center gap-2 mt-1">
-                            <span
-                                className={`px-3 py-1 rounded-full text-sm font-medium ${status.bgColor} ${status.textColor}`}>
-                              {status.text}
-                            </span>
+                                                        <span
+                                                            className={`px-3 py-1 rounded-full text-sm font-medium ${status.bgColor} ${status.textColor}`}>
+                                                          {status.text}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="text-right">
                                                 <div className="text-2xl font-bold text-blue-600">
-                                                    ${(order.price).toFixed(2)}
+                                                    ₹{(order.price).toFixed(2)}
                                                 </div>
                                                 <p className="text-sm text-gray-600">{order.products.length} item{order.products.length > 1 ? 's' : ''}</p>
                                             </div>
@@ -323,24 +325,24 @@ export default function SellerOrders() {
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                                                     <div className="flex items-center gap-2">
                                                         <User className="w-4 h-4 text-gray-600"/>
-                                                        <span className="font-medium">{order.user.username}</span>
+                                                        <span className="text-black/90 font-medium">{order.user.username}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <Mail className="w-4 h-4 text-gray-400"/>
-                                                        <span>{order.user.email}</span>
+                                                        <span className="text-black/90">{order.user.email}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <Phone className="w-4 h-4 text-gray-400"/>
-                                                        <span>{order.user.phoneNo}</span>
+                                                        <span className="text-black/90">{order.user.phoneNo}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <Home className="w-4 h-4 text-gray-400"/>
-                                                        <span>{order.user.hostelName} - {order.user.roomNumber}</span>
+                                                        <span className="text-black/90">{order.user.hostelName} - {order.user.roomNumber}</span>
                                                     </div>
                                                     {order.user.location && (
                                                         <div className="flex items-center gap-2 md:col-span-2">
                                                             <MapPin className="w-4 h-4 text-gray-400"/>
-                                                            <span>{order.user.location}</span>
+                                                            <span className="text-black/90">{order.user.location}</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -363,11 +365,11 @@ export default function SellerOrders() {
                                                         </div>
                                                         <div className="text-right">
                                                             <div className="font-semibold text-gray-900">
-                                                                ${(product.price).toFixed(2)} each
+                                                                ₹{(product.price).toFixed(2)} each
                                                             </div>
                                                             <div className="text-sm text-gray-600">
                                                                 Total:
-                                                                ${((product.price * product.quantity)).toFixed(2)}
+                                                                ₹{((product.price * product.quantity)).toFixed(2)}
                                                             </div>
                                                         </div>
                                                     </div>

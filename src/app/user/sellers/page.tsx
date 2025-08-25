@@ -104,11 +104,11 @@ function SellersContent() {
 
                     <div className="text-center mb-8">
                         <div
-                            className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-2xl p-6 shadow-2xl shadow-black/10 max-w-md mx-auto">
+                            className="backdrop-blur-lg flex-col items-center bg-white/30 border border-white/20 rounded-2xl p-6 shadow-2xl shadow-black/10 max-w-md mx-auto">
                             <img src={productImage} alt="Product Image"/>
                             <h1 className="text-2xl font-bold text-gray-800 line-clamp-1 mb-2">{productName}</h1>
                             <p className="text-lg text-gray-600">Base Price: <span
-                                className="font-bold text-gray-800">${productPrice}</span></p>
+                                className="font-bold text-gray-800">₹{productPrice}</span></p>
                         </div>
                     </div>
 

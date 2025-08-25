@@ -159,13 +159,13 @@ function OrderDetailModal({order, isOpen, onClose}: OrderDetailModalProps) {
                                         <h4 className="font-semibold text-gray-900">{product.productName}</h4>
                                         <div className="flex items-center gap-4 mt-2">
                                             <span
-                                                className="text-blue-600 font-semibold">${formatPrice(product.price)}</span>
+                                                className="text-blue-600 font-semibold">₹{formatPrice(product.price)}</span>
                                             <span className="text-gray-500">Qty: {product.quantity}</span>
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         <div className="font-bold text-gray-900">
-                                            ${formatPrice(product.price * product.quantity)}
+                                            ₹{formatPrice(product.price * product.quantity)}
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@ function OrderDetailModal({order, isOpen, onClose}: OrderDetailModalProps) {
                             </div>
                             <div className="text-right">
                                 <div className="text-3xl font-bold text-blue-600">
-                                    ${formatPrice(order.price)}
+                                    ₹{formatPrice(order.price)}
                                 </div>
                             </div>
                         </div>
@@ -392,7 +392,7 @@ export default function OrdersPage() {
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="text-2xl font-bold text-blue-600">
-                                                        ${formatPrice(order.price)}
+                                                        ₹{formatPrice(order.price)}
                                                     </p>
                                                 </div>
                                             </div>

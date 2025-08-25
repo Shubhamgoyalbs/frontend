@@ -392,7 +392,7 @@ export default function Profile() {
                                                 type="text"
                                                 value={profile.username}
                                                 onChange={(e) => handleFieldChange("username", e.target.value)}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="flex-1 px-3 py-2 border text-black/90 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             />
                                             <button
                                                 onClick={() => setEditingFields(prev => {
@@ -450,7 +450,7 @@ export default function Profile() {
                                                 type="tel"
                                                 value={profile.phoneNo}
                                                 onChange={(e) => handleFieldChange("phoneNo", e.target.value)}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="flex-1 px-3 py-2 text-black/90 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             />
                                             <button
                                                 onClick={() => setEditingFields(prev => {
@@ -496,7 +496,7 @@ export default function Profile() {
                                                 type="text"
                                                 value={profile.hostelName}
                                                 onChange={(e) => handleFieldChange("hostelName", e.target.value)}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="flex-1 px-3 py-2 border text-black/90 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             />
                                             <button
                                                 onClick={() => setEditingFields(prev => {
@@ -542,7 +542,7 @@ export default function Profile() {
                                                 type="text"
                                                 value={profile.roomNumber}
                                                 onChange={(e) => handleFieldChange("roomNumber", e.target.value)}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="flex-1 px-3 py-2 text-black/90 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             />
                                             <button
                                                 onClick={() => setEditingFields(prev => {
@@ -600,7 +600,7 @@ export default function Profile() {
                                                 type="text"
                                                 value={profile.location || ""}
                                                 onChange={(e) => handleFieldChange("location", e.target.value)}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="flex-1 px-3 py-2 text-black/90 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 placeholder="Enter location"
                                             />
                                             <button
