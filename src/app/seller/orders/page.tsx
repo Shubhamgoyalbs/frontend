@@ -325,7 +325,7 @@ export default function SellerOrders() {
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                                                     <div className="flex items-center gap-2">
                                                         <User className="w-4 h-4 text-gray-600"/>
-                                                        <span className="text-black/90 font-medium">{order.user.username}</span>
+                                                        <span className="text-black/90">{order.user.username}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <Mail className="w-4 h-4 text-gray-400"/>
