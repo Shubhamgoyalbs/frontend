@@ -40,17 +40,6 @@ export function ProductCard({product, productId}: ProductCardProps) {
                     <h3 className="font-semibold w-[160px] text-lg text-gray-900  line-clamp-1">
                         {product.name}
                     </h3>
-                    {product.quantity > 0 ? (
-                        <span
-                            className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-green-100 text-green-800 ">
-              In Stock
-            </span>
-                    ) : (
-                        <span
-                            className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-red-100 text-red-800">
-              Out of Stock
-            </span>
-                    )}
                 </div>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -60,9 +49,9 @@ export function ProductCard({product, productId}: ProductCardProps) {
                 {/* Price and Actions */}
                 <div className="flex items-center justify-between">
                     <div>
-            <span className="text-2xl font-bold text-gray-900">
-              ${product.price.toFixed(2)}
-            </span>
+                        <span className="text-2xl font-bold text-gray-900">
+                          ₹{product.price.toFixed(2)}
+                        </span>
                     </div>
 
                     <button

@@ -265,7 +265,7 @@ export default function SellerHome() {
 
                                         <div className="flex items-center justify-between">
                                             <div className="text-lg font-bold text-blue-600">
-                                                ${product.price.toFixed(2)}
+                                                ₹{product.price.toFixed(2)}
                                             </div>
                                             <div className="text-sm text-gray-500">
                                                 ID: {product.productId}

@@ -272,7 +272,7 @@ export default function CartPage() {
                                             <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
                                             <div className="flex items-center gap-4 mt-2">
                                                 <span
-                                                    className="text-lg font-bold text-blue-600">${item.price.toFixed(2)}</span>
+                                                    className="text-lg font-bold text-blue-600">₹{item.price.toFixed(2)}</span>
                                                 <span className="text-sm text-gray-500">Max: {item.maxQuantity}</span>
                                             </div>
                                         </div>
@@ -300,7 +300,7 @@ export default function CartPage() {
                                         {/* Item Total */}
                                         <div className="text-right">
                                             <div
-                                                className="font-bold text-gray-900">${(item.price * item.qtyInCart).toFixed(2)}</div>
+                                                className="font-bold text-gray-900">₹{(item.price * item.qtyInCart).toFixed(2)}</div>
                                             <button
                                                 onClick={() => handleRemoveItem(item.productId)}
                                                 className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1 mt-1 transition-colors"
@@ -327,7 +327,7 @@ export default function CartPage() {
                             <div className="space-y-4 mb-6">
                                 <div className="flex justify-between text-gray-600">
                                     <span>Subtotal ({cartItems.length} items)</span>
-                                    <span>${subtotal.toFixed(2)}</span>
+                                    <span>₹{subtotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
                                     <span>Delivery Charges</span>
@@ -335,20 +335,20 @@ export default function CartPage() {
                                         <span className="text-green-600 font-medium">Free</span>
                                     ) : (
                                         <span
-                                            className="text-orange-600 font-medium">${deliveryCharges.toFixed(2)}</span>
+                                            className="text-orange-600 font-medium">₹{deliveryCharges.toFixed(2)}</span>
                                     )}
                                 </div>
                                 {deliveryCharges > 0 && (
                                     <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                                         <p className="text-xs text-orange-700 text-center">
-                                            💰 Add ${(200 - subtotal).toFixed(2)} more to get free delivery!
+                                            💰 Add ₹{(200 - subtotal).toFixed(2)} more to get free delivery!
                                         </p>
                                     </div>
                                 )}
                                 <div className="border-t border-gray-200 pt-4">
                                     <div className="flex justify-between text-lg font-bold text-gray-900">
                                         <span>Total</span>
-                                        <span className="text-blue-600">${totalAmount.toFixed(2)}</span>
+                                        <span className="text-blue-600">₹{totalAmount.toFixed(2)}</span>
                                     </div>
                                 </div>
                             </div>
